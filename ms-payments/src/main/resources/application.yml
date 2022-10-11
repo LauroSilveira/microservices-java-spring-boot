@@ -1,0 +1,33 @@
+
+# Enable the automatic discover port from eureka
+server:
+  port: 0
+
+
+eureka:
+  instance:
+    # generate an instance with appication name and a random number
+    # Is a unique identifier for each microservice
+    instance-id: ${spring.application.name}:${random.int}
+
+spring:
+  application:
+    name: ms-payments
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/payments?createDatabaseIfNotExist=true
+    username: root
+    password:
+  jpa:
+    show-sql: true
+    properties:
+      - hibernate.format_sql: true
+
+# Resilience4J
+resilience4j:
+  circuitbreaker:
+    instances:
+      updateOrder:
+        slidingWindowSize: 2
+        minimumNumberOfCalls: 2
+        waitDurationInOpenState: 50s

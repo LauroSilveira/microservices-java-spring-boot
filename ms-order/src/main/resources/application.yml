@@ -1,0 +1,22 @@
+
+# Server port 0 to automatic register on service registry (eureka)
+server:
+  port: 0
+
+spring:
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        password:
+        username: root
+        url: jdbc:mysql://localhost:3306/orders?createDatabaseIfNotExist=true
+    application:
+      name: ms-order
+
+
+eureka:
+  instance:
+    # generate an instance with appication name and a random number
+    # Is a unique identifier for each microservice
+    instance-id: ${spring.application.name}:${random.int}
+
+

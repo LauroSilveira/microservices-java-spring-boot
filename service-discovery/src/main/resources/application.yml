@@ -1,0 +1,13 @@
+server:
+  port: 8761
+
+spring:
+  application:
+    name: service dicovery
+
+# is necessary to set a FALSE register-with-eureka and fetch-registry
+# to tell is a server and not a client discovery
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
