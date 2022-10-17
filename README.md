@@ -24,7 +24,7 @@ Payments and Order Payments using Spring cloud feign, an Api Gateway to do the l
 In the future I will refactor to use assichronous comunication with Apcha kafka.
 
 ## Achitecture Diagram
-![](data/Arquitecture.png)
+![](data/Arquitecture.drawio-3.drawio.png)
 
 ## Techinologies 
 
