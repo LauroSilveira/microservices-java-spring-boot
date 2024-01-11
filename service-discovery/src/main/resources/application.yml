@@ -3,11 +3,13 @@ server:
 
 spring:
   application:
-    name: service dicovery
+    name: service-discovery
 
 # is necessary to set a FALSE register-with-eureka and fetch-registry
-# to tell is a server and not a client discovery
+# to tell that microservice is a server and not a client
 eureka:
+  instance:
+    hostname: localhost
   client:
     register-with-eureka: false
     fetch-registry: false
