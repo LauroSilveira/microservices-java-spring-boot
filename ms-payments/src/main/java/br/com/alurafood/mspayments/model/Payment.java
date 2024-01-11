@@ -1,14 +1,23 @@
 package br.com.alurafood.mspayments.model;
 
-import java.util.ArrayList;
-import java.util.List;
-import lombok.*;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+
 import java.math.BigDecimal;
 
 @Entity
@@ -37,7 +46,7 @@ public class Payment {
 
     @NotBlank
     @Size(max = 7)
-    private String expirate;
+    private String expired;
 
     @NotBlank
     @Size(min = 3, max = 3)

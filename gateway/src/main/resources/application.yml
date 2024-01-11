@@ -3,11 +3,16 @@ server:
 
 spring:
   application:
-    name: gateway
+    name: api-gateway
   cloud:
     gateway:
       discovery:
+        # Tells to service discovery to find the api-gateway
+        # this will redirect all request to api-gateway
         locator:
           enabled: true
           # enable applications name in lower case
           lower-case-service-id: true
+eureka:
+  instance:
+    instance-id: ${spring.application.name}

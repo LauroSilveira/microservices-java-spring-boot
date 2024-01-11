@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 
-@FeignClient("ms-order")
+@FeignClient(value = "ms-order")
 public interface OrderFeignClient {
 
   @PutMapping(value = "/order/{id}/payment")
-  void updatePayment(@PathVariable final Long paymentId);
+  void updatePayment(@PathVariable final Long id);
 
   @GetMapping(value = "/order/{id}")
-  Order getOrderItems(@PathVariable final Long orderId);
+  Order getOrderItems(@PathVariable final Long id);
 }
