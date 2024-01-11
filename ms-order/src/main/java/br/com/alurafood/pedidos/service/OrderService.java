@@ -1,3 +1,4 @@
+
 package br.com.alurafood.pedidos.service;
 
 import br.com.alurafood.pedidos.dto.OrderDto;
@@ -15,4 +16,5 @@ public interface OrderService {
     OrderDto updateStatus(Long id, StatusDto dto);
 
     void approvePayment(Long id);
+
 }

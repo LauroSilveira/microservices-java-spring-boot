@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+
 @Service
 public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository repository;
@@ -18,6 +19,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final OrderFeignClient orderFeignClient;
 
     public PaymentServiceImpl(PaymentRepository repository, PaymentMapper mapper, OrderFeignClient orderFeignClient) {
+
         this.repository = repository;
         this.mapper = mapper;
         this.orderFeignClient = orderFeignClient;
@@ -25,6 +27,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 
     @Override
+
     public PaymentDto save(final PaymentDto dto) {
         final var payment = mapper.mapToEntity(dto);
         payment.setStatus(Status.CREATED);
@@ -32,13 +35,16 @@ public class PaymentServiceImpl implements PaymentService {
         return mapper.mapToDto(payment);
     }
 
+
     @Override
+
     public PaymentDto update(@NotNull final Long id, final PaymentDto dto) {
         final var paymentUpdated = mapper.mapToEntity(dto);
         paymentUpdated.setId(id);
         repository.save(paymentUpdated);
         return mapper.mapToDto(paymentUpdated);
     }
+
 
     @Override
     public void delete(final Long id) {
@@ -63,6 +69,7 @@ public class PaymentServiceImpl implements PaymentService {
                 dto.orderId(), dto.paymentId(), orderItems);
     }
 
+
     @Override
     public void confirmPayment(final Long id) {
         final var paymentUpdated = repository.findById(id);
@@ -83,6 +90,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public void updateStatus(Long id) {
         final var statusUpdated = repository.findById(id);
+
 
         if (statusUpdated.isEmpty()) {
             throw new EntityNotFoundException();
