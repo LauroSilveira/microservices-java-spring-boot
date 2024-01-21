@@ -14,5 +14,8 @@ spring:
           # enable applications name in lower case
           lower-case-service-id: true
 eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
   instance:
     instance-id: ${spring.application.name}

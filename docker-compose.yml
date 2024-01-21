@@ -1,0 +1,134 @@
+services:
+  # default mysql database image
+  # this: &mysql-defaults allows us multiples databases
+  mysql-db-default: &mysql-defaults
+    image: mysql:latest
+    container_name: "mysql-db-default"
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+    volumes:
+      - ./mysql:/var/lib/data
+
+  # instance of mysql database of ms-order
+  mysql-database-order:
+    <<: *mysql-defaults
+    environment:
+      MYSQL_ROOT_PASSWORD: admin-order
+      MYSQL_DATABASE: orders
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+    ports:
+      - "3306:3306"
+    restart: always
+    container_name: "mysql-database-order"
+    healthcheck:
+      # ping the admin and marks the database container as healthy
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 5s
+      retries: 3
+    networks:
+      - compose-bridge
+    volumes:
+      - ./mysql-order:/var/lib/data
+
+  # instance of mysql database of ms-payments
+  mysql-database-payments:
+    <<: *mysql-defaults
+    environment:
+      MYSQL_ROOT_PASSWORD: admin-payments
+      MYSQL_DATABASE: payments
+      MYSQL_USER: user_payments
+      MYSQL_PASSWORD: admin_payments
+    ports:
+      - "3307:3306"
+    restart: always
+    container_name: "mysql-database-payments"
+    healthcheck:
+      # ping the admin and marks the database container as healthy
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 5s
+      retries: 3
+    networks:
+      - compose-bridge
+    volumes:
+      - ./mysql-payments:/var/lib/data
+
+  service-discovery:
+    build:
+      context: ./service-discovery
+      dockerfile: ./Dockerfile
+    ports:
+      - "8761:8761"
+    container_name: "service-discovery"
+    volumes:
+      - ./data/service-discovery:/data
+    networks:
+      - compose-bridge
+
+  # obs: api-gateway in the beginning will fail because he will try to connect to Eureka Server, but it is OK
+  # because he will retry one more time after service-discovery already up
+  api-gateway:
+    build:
+      context: ./gateway
+      dockerfile: ./Dockerfile
+    ports:
+      - "8082:8082"
+    container_name: "api-gateway"
+    environment:
+      # IMPORTANT: To connect to Eureka server is necessary use container name (in this case service-discovery) instead
+      # localhost
+      - eureka.client.service-url.defaultZone=http://service-discovery:8761/eureka/
+    networks:
+      - compose-bridge
+
+  ms-order:
+    depends_on:
+      mysql-database-order:
+        condition: service_healthy
+    build:
+      context: ./ms-order
+      dockerfile: ./Dockerfile
+    environment:
+      # this will override argument when create the image
+      # In this case the url connection will be jdbc:mysql://mysql-database-order:3306/orders?createDatabaseIfNotExist=true
+      - MYSQL_DB=mysql-database-order
+      - spring.datasource.username=user
+      - spring.datasource.password=user
+      # IMPORTANT: To connect to Eureka server is necessary use container name (in this case service-discovery) instead
+      # localhost
+      - eureka.client.service-url.defaultZone=http://service-discovery:8761/eureka/
+    container_name: "ms-order"
+    volumes:
+      - ./data/ms-order:/data
+    ports:
+      - "0"
+    networks:
+      - compose-bridge
+
+  ms-payments:
+    depends_on:
+      mysql-database-payments:
+        condition: service_healthy
+    build:
+      context: ./ms-payments
+      dockerfile: ./Dockerfile
+    environment:
+      # this will override argument when create the image
+      # In this case the url connection will be jdbc:mysql://mysql-database-order:3306/orders?createDatabaseIfNotExist=true
+      - MYSQL_DB=mysql-database-payments
+      - spring.datasource.username=user_payments
+      - spring.datasource.password=admin_payments
+      # IMPORTANT: To connect to Eureka server is necessary use container name (in this case service-discovery) instead
+      # localhost
+      - eureka.client.service-url.defaultZone=http://service-discovery:8761/eureka/
+    container_name: "ms-payments"
+    volumes:
+      - ./data/ms-payments:/data
+    ports:
+      - "0"
+    networks:
+      - compose-bridge
+
+networks:
+  compose-bridge:
+    driver: bridge
