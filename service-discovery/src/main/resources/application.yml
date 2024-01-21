@@ -5,11 +5,14 @@ spring:
   application:
     name: service-discovery
 
-# is necessary to set a FALSE register-with-eureka and fetch-registry
-# to tell that microservice is a server and not a client
+
 eureka:
   instance:
     hostname: localhost
+    # is necessary to set a FALSE register-with-eureka and fetch-registry
+    # to tell that microservice is a server and not a client
   client:
     register-with-eureka: false
     fetch-registry: false
+    service-url:
+      defaultZone: http://localhost:8761/eureka
