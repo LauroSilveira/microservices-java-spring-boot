@@ -9,14 +9,14 @@ services:
     volumes:
       - ./mysql:/var/lib/data
 
-  # instance of mysql database ms-order
+  # instance of mysql database of ms-order
   mysql-database-order:
     <<: *mysql-defaults
     environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_ORDER_DATABASE}
-      - MYSQL_USER=${MYSQL_ORDER_DB_USER}
-      - MYSQL_PASSWORD=${MYSQL_ORDER_DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_ORDER_DATABASE}
+      MYSQL_USER: ${MYSQL_ORDER_DB_USER}
+      MYSQL_PASSWORD: ${MYSQL_ORDER_DB_PASSWORD}
     ports:
       - "3306:3306"
     restart: always
@@ -36,10 +36,10 @@ services:
   mysql-database-payments:
     <<: *mysql-defaults
     environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_PAYMENTS_DATABASE}
-      - MYSQL_USER=${MYSQL_PAYMENTS_DB_USER}
-      - MYSQL_PASSWORD=${MYSQL_PAYMENTS_DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_PAYMENTS_DATABASE}
+      MYSQL_USER: ${MYSQL_PAYMENTS_DB_USER}
+      MYSQL_PASSWORD: ${MYSQL_PAYMENTS_DB_PASSWORD}
     ports:
       - "3307:3306"
     restart: always
@@ -49,7 +49,7 @@ services:
       test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
       interval: 20s
       timeout: 5s
-      retries: 3
+      retries: 5
     networks:
       - compose-bridge
     volumes:
