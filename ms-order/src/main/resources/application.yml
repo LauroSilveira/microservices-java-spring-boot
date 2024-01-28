@@ -6,9 +6,9 @@ server:
 spring:
     datasource:
         driver-class-name: com.mysql.cj.jdbc.Driver
-        password: Vincere7
-        username: root
-        url: jdbc:mysql://${MYSQL_DB:localhost:3306}/orders?createDatabaseIfNotExist=true
+        password: ${MYSQL_ORDER_DB_USER:root}
+        username: ${MYSQL_ORDER_DB_PASSWORD:Vincere7}
+        url: jdbc:mysql://${MYSQL_ORDER_DB_INSTANCE:localhost:3306}/orders?createDatabaseIfNotExist=true
     application:
       name: ms-order
     jpa:
