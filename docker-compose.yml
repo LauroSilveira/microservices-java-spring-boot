@@ -5,7 +5,7 @@ services:
     image: mysql:latest
     container_name: "mysql-db-default"
     environment:
-      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     volumes:
       - ./mysql:/var/lib/data
 
@@ -13,10 +13,11 @@ services:
   mysql-database-order:
     <<: *mysql-defaults
     environment:
-      MYSQL_ROOT_PASSWORD: admin-order
-      MYSQL_DATABASE: orders
-      MYSQL_USER: user_order
-      MYSQL_PASSWORD: admin_order
+
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_ORDER_DATABASE}
+      MYSQL_USER: ${MYSQL_ORDER_DB_USER}
+      MYSQL_PASSWORD: ${MYSQL_ORDER_DB_PASSWORD}
     ports:
       - "3306:3306"
     restart: always
@@ -36,10 +37,10 @@ services:
   mysql-database-payments:
     <<: *mysql-defaults
     environment:
-      MYSQL_ROOT_PASSWORD: admin-payments
-      MYSQL_DATABASE: payments
-      MYSQL_USER: user_payments
-      MYSQL_PASSWORD: admin_payments
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_PAYMENTS_DATABASE}
+      MYSQL_USER: ${MYSQL_PAYMENTS_DB_USER}
+      MYSQL_PASSWORD: ${MYSQL_PAYMENTS_DB_PASSWORD}
     ports:
       - "3307:3306"
     restart: always
@@ -93,9 +94,10 @@ services:
     environment:
       # this will override argument when create the image
       # In this case the url connection will be jdbc:mysql://mysql-database-order:3306/orders?createDatabaseIfNotExist=true
-      - URL_DATABASE_ORDER=mysql-database-order
-      - spring.datasource.username=user_order
-      - spring.datasource.password=admin_order
+
+      - MYSQL_ORDER_DB_INSTANCE=${MYSQL_ORDER_DB_INSTANCE}
+      - spring.datasource.username=${MYSQL_ORDER_DB_USER}
+      - spring.datasource.password=${MYSQL_ORDER_DB_PASSWORD}
       # IMPORTANT: To connect to Eureka server is necessary use container name (in this case service-discovery) instead
       # localhost
       - eureka.client.service-url.defaultZone=http://service-discovery:8761/eureka/
@@ -117,9 +119,10 @@ services:
     environment:
       # this will override argument when create the image
       # In this case the url connection will be jdbc:mysql://mysql-database-order:3306/orders?createDatabaseIfNotExist=true
-      - URL_DATABASE_PAYMENTS=mysql-database-payments
-      - spring.datasource.username=user_payments
-      - spring.datasource.password=admin_payments
+      - MYSQL_PAYMENTS_DB_INSTANCE=${MYSQL_PAYMENTS_DB_INSTANCE}
+      - spring.datasource.username=${MYSQL_PAYMENTS_DB_USER}
+      - spring.datasource.password=${MYSQL_PAYMENTS_DB_PASSWORD}
+
       # IMPORTANT: To connect to Eureka server is necessary use container name (in this case service-discovery) instead
       # localhost
       - eureka.client.service-url.defaultZone=http://service-discovery:8761/eureka/
