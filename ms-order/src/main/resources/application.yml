@@ -8,7 +8,7 @@ spring:
         driver-class-name: com.mysql.cj.jdbc.Driver
         password: Vincere7
         username: root
-        url: jdbc:mysql://${MYSQL_DB:localhost:3306}/orders?createDatabaseIfNotExist=true
+        url: jdbc:mysql://${URL_DATABASE_ORDER:localhost:3306}/orders?createDatabaseIfNotExist=true
     application:
       name: ms-order
     jpa:

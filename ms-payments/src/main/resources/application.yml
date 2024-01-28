@@ -18,7 +18,7 @@ spring:
     name: ms-payments
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${MYSQL_DB:localhost:3306}/payments?createDatabaseIfNotExist=true
+    url: jdbc:mysql://${URL_DATABASE_PAYMENTS:localhost:3306}/payments?createDatabaseIfNotExist=true
     username: root
     password: Vincere7
   jpa:
