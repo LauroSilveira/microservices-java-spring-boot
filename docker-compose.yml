@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   # default mysql database image
   # this: &mysql-defaults allows us multiples databases
@@ -5,7 +7,7 @@ services:
     image: mysql:latest
     container_name: "mysql-db-default"
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     volumes:
       - ./mysql:/var/lib/data
 
@@ -13,11 +15,10 @@ services:
   mysql-database-order:
     <<: *mysql-defaults
     environment:
-
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_ORDER_DATABASE}
-      MYSQL_USER: ${MYSQL_ORDER_DB_USER}
-      MYSQL_PASSWORD: ${MYSQL_ORDER_DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_ORDER_DATABASE}
+      - MYSQL_USER=${MYSQL_ORDER_DB_USER}
+      - MYSQL_PASSWORD=${MYSQL_ORDER_DB_PASSWORD}
     ports:
       - "3306:3306"
     restart: always
@@ -37,10 +38,10 @@ services:
   mysql-database-payments:
     <<: *mysql-defaults
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_PAYMENTS_DATABASE}
-      MYSQL_USER: ${MYSQL_PAYMENTS_DB_USER}
-      MYSQL_PASSWORD: ${MYSQL_PAYMENTS_DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_PAYMENTS_DATABASE}
+      - MYSQL_USER=${MYSQL_PAYMENTS_DB_USER}
+      - MYSQL_PASSWORD=${MYSQL_PAYMENTS_DB_PASSWORD}
     ports:
       - "3307:3306"
     restart: always
@@ -77,6 +78,7 @@ services:
     ports:
       - "8082:8082"
     container_name: "api-gateway"
+
     environment:
       # IMPORTANT: To connect to Eureka server is necessary use container name (in this case service-discovery) instead
       # localhost
