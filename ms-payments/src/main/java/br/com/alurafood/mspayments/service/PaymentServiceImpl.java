@@ -3,13 +3,18 @@ package br.com.alurafood.mspayments.service;
 import br.com.alurafood.mspayments.dto.PaymentDto;
 import br.com.alurafood.mspayments.feignclient.OrderFeignClient;
 import br.com.alurafood.mspayments.mapper.PaymentMapper;
+import br.com.alurafood.mspayments.model.Payment;
 import br.com.alurafood.mspayments.model.Status;
 import br.com.alurafood.mspayments.repository.PaymentRepository;
+import feign.FeignException;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 
 @Service
@@ -17,17 +22,19 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository repository;
     private final PaymentMapper mapper;
     private final OrderFeignClient orderFeignClient;
+    private final PaymentMapper paymentMapper;
 
-    public PaymentServiceImpl(PaymentRepository repository, PaymentMapper mapper, OrderFeignClient orderFeignClient) {
+    public PaymentServiceImpl(PaymentRepository repository, PaymentMapper mapper, OrderFeignClient orderFeignClient,
+                              PaymentMapper paymentMapper) {
 
         this.repository = repository;
         this.mapper = mapper;
         this.orderFeignClient = orderFeignClient;
+        this.paymentMapper = paymentMapper;
     }
 
 
     @Override
-
     public PaymentDto save(final PaymentDto dto) {
         final var payment = mapper.mapToEntity(dto);
         payment.setStatus(Status.CREATED);
@@ -37,7 +44,6 @@ public class PaymentServiceImpl implements PaymentService {
 
 
     @Override
-
     public PaymentDto update(@NotNull final Long id, final PaymentDto dto) {
         final var paymentUpdated = mapper.mapToEntity(dto);
         paymentUpdated.setId(id);
@@ -59,6 +65,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .map(mapper::mapToDto);
     }
 
+    @CircuitBreaker(name = "paymentInfo", fallbackMethod = "getPaymentInfoFallBack")
     @Override
     public PaymentDto getById(final Long id) {
         final var model = repository.findById(id)
@@ -69,7 +76,14 @@ public class PaymentServiceImpl implements PaymentService {
                 dto.orderId(), dto.paymentId(), orderItems);
     }
 
+    //FallBack getById
+    public PaymentDto getPaymentInfoFallBack(final Long id, FeignException e) {
+        return this.repository.findById(id)
+                .map(paymentMapper::mapToDto)
+                .orElseThrow(EntityNotFoundException::new);
+    }
 
+    @CircuitBreaker(name = "updateOrder", fallbackMethod = "updateOrderFallBack")
     @Override
     public void confirmPayment(final Long id) {
         final var paymentUpdated = repository.findById(id);
@@ -84,6 +98,10 @@ public class PaymentServiceImpl implements PaymentService {
 
         // Calls FeignClient to MS-ORDER
         orderFeignClient.updatePayment(paymentUpdated.get().getPaymentId());
+    }
+
+    public void updateOrderFallBack(final Long id, FeignException e) {
+        this.updateStatus(id);
     }
 
     //Fallback method

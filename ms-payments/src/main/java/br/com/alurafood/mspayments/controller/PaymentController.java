@@ -21,68 +21,60 @@ import java.util.Optional;
 @RequestMapping("payments")
 public class PaymentController {
 
-  private final PaymentService service;
+    private final PaymentService service;
 
-  public PaymentController(PaymentService service) {
-    this.service = service;
-  }
+    public PaymentController(PaymentService service) {
+        this.service = service;
+    }
 
-  @GetMapping
-  public Page<PaymentDto> getAllPayments(@PageableDefault final Pageable pageable) {
-    return service.getAllPayments(pageable);
-  }
+    @GetMapping
+    public Page<PaymentDto> getAllPayments(@PageableDefault final Pageable pageable) {
+        return service.getAllPayments(pageable);
+    }
 
-  @GetMapping("/{id}")
-  public ResponseEntity<PaymentDto> getPaymentById(@PathVariable @NotNull final Long id) {
-    final var paymentDto = service.getById(id);
-    return Optional.ofNullable(paymentDto).map(ResponseEntity::ok)
-        .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-  }
+    @GetMapping("/{id}")
+    public ResponseEntity<PaymentDto> getPaymentById(@PathVariable @NotNull final Long id) {
+        final var paymentDto = service.getById(id);
+        return Optional.ofNullable(paymentDto).map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
 
-  @PostMapping
-  public ResponseEntity<PaymentDto> save(@RequestBody @Valid final PaymentDto dto, final UriComponentsBuilder uriComponentsBuilder) {
-    final var uri = uriComponentsBuilder.path("/payment/{id}").buildAndExpand(dto.paymentId())
-        .toUri();
-    final var paymentDto = service.save(dto);
-    return Optional.ofNullable(paymentDto)
-            .map(p -> ResponseEntity.created(uri)
-            .body(p))
-        .orElse(ResponseEntity.internalServerError().build());
-  }
+    @PostMapping
+    public ResponseEntity<PaymentDto> save(@RequestBody @Valid final PaymentDto dto, final UriComponentsBuilder uriComponentsBuilder) {
+        final var uri = uriComponentsBuilder.path("/payment/{id}").buildAndExpand(dto.paymentId())
+                .toUri();
+        final var paymentDto = service.save(dto);
+        return ResponseEntity.created(uri).body(paymentDto);
+    }
 
-  @PutMapping("/{id}")
-  public ResponseEntity<PaymentDto> update(@PathVariable @NotNull final Long id,
-      @RequestBody @Valid final PaymentDto dto) {
-    final var paymentDto = service.update(id, dto);
-    return Optional.ofNullable(paymentDto)
-        .map(ResponseEntity::ok)
-        .orElse(ResponseEntity.internalServerError().build());
-  }
+    @PutMapping("/{id}")
+    public ResponseEntity<PaymentDto> update(@PathVariable @NotNull final Long id,
+                                             @RequestBody @Valid final PaymentDto dto) {
+        final var paymentDto = service.update(id, dto);
+        return ResponseEntity.ok(paymentDto);
+    }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<Void> delete(@PathVariable @NotNull final Long id) {
-    service.delete(id);
-    return ResponseEntity.ok().build();
-  }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable @NotNull final Long id) {
+        service.delete(id);
+        return ResponseEntity.ok().build();
+    }
 
-  /**
-   * Return the port of the instance, because we can have more than one instance of this microservice
-   * @param port of this instance
-   * @return the port of this Instance
-   */
-  @GetMapping("/port")
-  public String getInstancePort(@Value("${local.server.port}") final String port) {
-    return String.format("Request answered by Instance on port %s", port);
-  }
+    /**
+     * Return the port of the instance, because we can have more than one instance of this microservice
+     *
+     * @param port of this instance
+     * @return the port of this Instance
+     */
+    @GetMapping("/port")
+    public String getInstancePort(@Value("${local.server.port}") final String port) {
+        return String.format("Request answered by Instance on port %s", port);
+    }
 
-  @PatchMapping("/{id}/confirm")
-  @CircuitBreaker(name = "updateOrder", fallbackMethod = "updateOrderFallBack")
-  public void confirmPayment(@PathVariable @NotNull final Long id) {
-    service.confirmPayment(id);
-  }
+    @PatchMapping("/{id}/confirm")
 
-  public void updateOrderFallBack(final Long id, FeignException e) {
-      service.updateStatus(id);
-  }
+    public void confirmPayment(@PathVariable @NotNull final Long id) {
+        service.confirmPayment(id);
+    }
 
 }
