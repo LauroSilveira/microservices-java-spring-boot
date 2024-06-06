@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.2.1</version>
+		<version>3.3.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -17,8 +17,8 @@
 	<description>A service discovery Eureka responsible for register all microservices</description>
 
 	<properties>
-		<spring-cloud.version>2023.0.0</spring-cloud.version>
-		<java.version>17</java.version>
+		<spring-cloud.version>2023.0.2</spring-cloud.version>
+		<java.version>21</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 	</properties>

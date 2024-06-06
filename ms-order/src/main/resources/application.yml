@@ -7,7 +7,7 @@ spring:
     datasource:
         driver-class-name: com.mysql.cj.jdbc.Driver
         password: ${MYSQL_ORDER_DB_USER:root}
-        username: ${MYSQL_ORDER_DB_PASSWORD:Vincere7}
+        username: ${MYSQL_ORDER_DB_PASSWORD:root}
         url: jdbc:mysql://${MYSQL_ORDER_DB_INSTANCE:localhost:3306}/orders?createDatabaseIfNotExist=true
     application:
       name: ms-order

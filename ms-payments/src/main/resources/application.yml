@@ -20,7 +20,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${MYSQL_PAYMENTS_DB_INSTANCE:localhost:3306}/payments?createDatabaseIfNotExist=true
     username: ${MYSQL_PAYMENTS_DB_USER:root}
-    password: ${MYSQL_PAYMENTS_DB_PASSWORD:Vincere7}
+    password: ${MYSQL_PAYMENTS_DB_PASSWORD:root}
   jpa:
     show-sql: true
     properties:
@@ -32,6 +32,12 @@ resilience4j:
   circuitbreaker:
     instances:
       updateOrder:
+        slidingWindowSize: 2
+        # Indicate the minimum of request to enable the circuit breaker
+        minimumNumberOfCalls: 2
+        # Indicate that the time will remain once the state changes to open/semi-open
+        waitDurationInOpenState: 50s
+      paymentInfo:
         slidingWindowSize: 2
         # Indicate the minimum of request to enable the circuit breaker
         minimumNumberOfCalls: 2

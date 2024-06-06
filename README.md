@@ -29,8 +29,8 @@ In the future I will refactor to use asynchronous communication with Apache kafk
 
 ## Technologies
 
-- Java 17
-- Spring boot 2.7.4
+- Java 21
+- Spring boot 3.3.0
 - MapStruct
 - Spring Cloud API Gateway
 - Spring Eureka Server and Discovery
@@ -125,7 +125,7 @@ For each request this will show a different port. That is the Load Balance runni
 - [ ] Creation of unity tests and integration test.
 - [ ] Apply Oauth authentication.
 - [ ] Asynchronnous communication with Apache kafka.
-- [ ] Deploy on cloud using docker.
+- [x] Deploy on cloud using docker.
 
 ## Contributors
 [@LauroSilveira](https://github.com/LauroSilveira)
