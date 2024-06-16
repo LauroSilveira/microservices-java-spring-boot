@@ -86,18 +86,14 @@ public class PaymentServiceImpl implements PaymentService {
     @CircuitBreaker(name = "updateOrder", fallbackMethod = "updateOrderFallBack")
     @Override
     public void confirmPayment(final Long id) {
-        final var paymentUpdated = repository.findById(id);
+        final var paymentUpdated = repository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
 
-        if (paymentUpdated.isEmpty()) {
-            throw new EntityNotFoundException();
-        }
-
-        paymentUpdated.get()
-                .setStatus(Status.CONFIRMED);
-        repository.save(paymentUpdated.get());
+        paymentUpdated.setStatus(Status.CONFIRMED);
+        repository.save(paymentUpdated);
 
         // Calls FeignClient to MS-ORDER
-        orderFeignClient.updatePayment(paymentUpdated.get().getPaymentId());
+        orderFeignClient.updatePayment(paymentUpdated.getPaymentId());
     }
 
     public void updateOrderFallBack(final Long id, FeignException e) {
