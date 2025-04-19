@@ -4,18 +4,35 @@ server:
   port: 0
 
 spring:
-    datasource:
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        password: ${MYSQL_ORDER_DB_USER:root}
-        username: ${MYSQL_ORDER_DB_PASSWORD:root}
-        url: jdbc:mysql://${MYSQL_ORDER_DB_INSTANCE:localhost:3306}/orders?createDatabaseIfNotExist=true
-    application:
-      name: ms-order
-    jpa:
-      properties:
-        hibernate:
-          format_sql: true
-      show-sql: true
+  application:
+    name: ms-order
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: ${MYSQL_ORDER_DB_USER:root}
+    username: ${MYSQL_ORDER_DB_PASSWORD:root}
+    url: jdbc:mysql://${MYSQL_ORDER_DB_INSTANCE:localhost:3306}/orders?createDatabaseIfNotExist=true
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+  security:
+    oauth2:
+      client:
+        registration:
+          ms-order:
+            client-id: ms-order
+            client-secret: secret
+            client-name: ms-order
+            provider: spring
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8082
+            scope:
+              - openid
+        provider:
+          spring:
+            issuer-uri: ${AUTHORIZATION_SERVER_URL:http://localhost:9000}
+
 
 eureka:
   client:
@@ -26,4 +43,6 @@ eureka:
     # Is a unique identifier for each microservice
     instance-id: ${spring.application.name}:${random.int}
 
-
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG

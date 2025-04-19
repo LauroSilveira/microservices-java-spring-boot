@@ -1,5 +1,5 @@
 
-# Enable the automatic discover port from eureka
+# Enable the automatic discovers port from eureka
 server:
   port: 0
 
@@ -26,6 +26,22 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  security:
+    oauth2:
+      client:
+        registration:
+          ms-payments:
+            client-id: ms-payments
+            client-secret: secret
+            client-name: ms-payments
+            provider: spring
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8082
+            scope:
+              - openid
+        provider:
+          spring:
+            issuer-uri: ${AUTHORIZATION_SERVER_URL:http://localhost:9000}
 
 # Resilience4J
 resilience4j:

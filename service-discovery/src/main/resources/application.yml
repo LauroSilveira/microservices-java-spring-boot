@@ -5,7 +5,6 @@ spring:
   application:
     name: service-discovery
 
-
 eureka:
   instance:
     hostname: localhost

@@ -1,21 +1,62 @@
 server:
   port: 8082
 
+
 spring:
   application:
     name: api-gateway
+
+  security:
+    oauth2:
+      client:
+        # setup the provider token
+        provider:
+          spring:
+            issuer-uri: ${AUTHORIZATION_SERVER_URL:http://localhost:9000}
+        # setup oauth client
+        registration:
+          gateway:
+            client-id: gateway
+            client-secret: secret
+            client-name: gateway
+            provider: spring
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8082
+            scope:
+              - openid
   cloud:
     gateway:
       discovery:
         # Tells to service discovery to find the api-gateway
-        # this will redirect all request to api-gateway
+        # this will redirect all requests to api-gateway
         locator:
           enabled: true
-          # enable applications name in lower case
+          # enable application's name in lower case
           lower-case-service-id: true
+      routes:
+        - id: ms-order
+          uri: http://localhost:8082/ms-order
+          predicates:
+            - Path=/ms-order/**
+          filters:
+            - TokenRelay=
+        - id: ms-payments
+          uri: http://localhost:8082/ms-payments
+          predicates:
+            - Path=/ms-payments/**
+          filters:
+            - TokenRelay=
+
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
   instance:
     instance-id: ${spring.application.name}
+
+logging:
+  level:
+    com.netflix.eureka: DEBUG
+    org.springframework.cloud.netflix.eureka: DEBUG
+    security: DEBUG
+    web: DEBUG
