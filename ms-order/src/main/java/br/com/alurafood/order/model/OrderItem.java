@@ -1,4 +1,4 @@
-package br.com.alurafood.pedidos.model;
+package br.com.alurafood.order.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

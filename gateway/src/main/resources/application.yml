@@ -1,7 +1,6 @@
 server:
   port: 8082
 
-
 spring:
   application:
     name: api-gateway
@@ -12,20 +11,28 @@ spring:
         # setup the provider token
         provider:
           spring:
-            issuer-uri: ${AUTHORIZATION_SERVER_URL:http://localhost:9000}
+            token-uri: http://localhost:9000/oauth2/token
         # setup oauth client
         registration:
-          gateway:
-            client-id: gateway
-            client-secret: secret
-            client-name: gateway
+          api-gateway:
             provider: spring
-            authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:8082
-            scope:
-              - openid
+            client-id: api-gateway
+            client-secret: secret
+            client-name: api-gateway
+            authorization-grant-type: client_credentials
   cloud:
     gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origins: '*'
+            allowed-methods:
+              - GET
+              - POST
+              - PUT
+              - PATCH
+              - DELETE
+            allowed-headers: '*'
       discovery:
         # Tells to service discovery to find the api-gateway
         # this will redirect all requests to api-gateway
@@ -40,12 +47,14 @@ spring:
             - Path=/ms-order/**
           filters:
             - TokenRelay=
+            - RequestHeaderSize=1000B
         - id: ms-payments
           uri: http://localhost:8082/ms-payments
           predicates:
             - Path=/ms-payments/**
           filters:
             - TokenRelay=
+            - RequestHeaderSize=1000B
 
 eureka:
   client:

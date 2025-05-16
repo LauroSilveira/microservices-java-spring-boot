@@ -1,8 +1,8 @@
-package br.com.alurafood.pedidos.controller;
+package br.com.alurafood.order.controller;
 
-import br.com.alurafood.pedidos.dto.OrderDto;
-import br.com.alurafood.pedidos.dto.StatusDto;
-import br.com.alurafood.pedidos.service.OrderService;
+import br.com.alurafood.order.dto.OrderDto;
+import br.com.alurafood.order.dto.StatusDto;
+import br.com.alurafood.order.service.OrderService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Value;

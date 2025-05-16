@@ -1,7 +1,7 @@
-package br.com.alurafood.pedidos.repository;
+package br.com.alurafood.order.repository;
 
-import br.com.alurafood.pedidos.model.Order;
-import br.com.alurafood.pedidos.model.Status;
+import br.com.alurafood.order.model.Order;
+import br.com.alurafood.order.model.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

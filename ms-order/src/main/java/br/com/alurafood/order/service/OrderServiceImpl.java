@@ -1,11 +1,11 @@
-package br.com.alurafood.pedidos.service;
+package br.com.alurafood.order.service;
 
-import br.com.alurafood.pedidos.dto.OrderDto;
-import br.com.alurafood.pedidos.dto.StatusDto;
-import br.com.alurafood.pedidos.mapper.OrderMapper;
-import br.com.alurafood.pedidos.model.Order;
-import br.com.alurafood.pedidos.model.Status;
-import br.com.alurafood.pedidos.repository.OrderRepository;
+import br.com.alurafood.order.dto.OrderDto;
+import br.com.alurafood.order.dto.StatusDto;
+import br.com.alurafood.order.mapper.OrderMapper;
+import br.com.alurafood.order.model.Order;
+import br.com.alurafood.order.model.Status;
+import br.com.alurafood.order.repository.OrderRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 

@@ -1,9 +1,9 @@
-package br.com.alurafood.pedidos.mapper;
+package br.com.alurafood.order.mapper;
 
-import br.com.alurafood.pedidos.dto.OrderDto;
-import br.com.alurafood.pedidos.dto.OrderItemDto;
-import br.com.alurafood.pedidos.model.Order;
-import br.com.alurafood.pedidos.model.OrderItem;
+import br.com.alurafood.order.dto.OrderDto;
+import br.com.alurafood.order.dto.OrderItemDto;
+import br.com.alurafood.order.model.Order;
+import br.com.alurafood.order.model.OrderItem;
 import java.util.List;
 import org.mapstruct.Mapper;
 

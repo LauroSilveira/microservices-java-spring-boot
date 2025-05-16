@@ -18,7 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("payments")
+@RequestMapping("/payments")
 public class PaymentController {
 
     private final PaymentService service;
