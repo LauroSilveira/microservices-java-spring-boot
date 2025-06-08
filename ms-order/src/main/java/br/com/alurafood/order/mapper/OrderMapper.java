@@ -13,7 +13,7 @@ public interface OrderMapper {
 
   OrderDto mapToDto(Order order);
 
-  Order mapToEntiy(OrderDto orderDto);
+  Order mapToEntity(OrderDto orderDto);
 
   List<OrderItem> mapToItemEntity(List<OrderItemDto> itemDtos);
 

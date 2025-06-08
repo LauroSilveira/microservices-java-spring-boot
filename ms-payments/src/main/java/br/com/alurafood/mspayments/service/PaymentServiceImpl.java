@@ -10,28 +10,20 @@ import feign.FeignException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 
 @Service
+@RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository repository;
     private final PaymentMapper mapper;
     private final OrderFeignClient orderFeignClient;
     private final PaymentMapper paymentMapper;
-
-    public PaymentServiceImpl(PaymentRepository repository, PaymentMapper mapper, OrderFeignClient orderFeignClient,
-                              PaymentMapper paymentMapper) {
-
-        this.repository = repository;
-        this.mapper = mapper;
-        this.orderFeignClient = orderFeignClient;
-        this.paymentMapper = paymentMapper;
-    }
 
 
     @Override
@@ -60,20 +52,17 @@ public class PaymentServiceImpl implements PaymentService {
 
 
     @Override
-    public Page<PaymentDto> getAllPayments(final Pageable pageable) {
-        return repository.findAll(pageable)
-                .map(mapper::mapToDto);
+    public Page<Payment> getAllPayments(final Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
     @CircuitBreaker(name = "paymentInfo", fallbackMethod = "getPaymentInfoFallBack")
     @Override
     public PaymentDto getById(final Long id) {
-        final var model = repository.findById(id)
+        final var payment = repository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
-        final var dto = mapper.mapToDto(model);
-        final var orderItems = orderFeignClient.getOrderItems(model.getOrderId()).getItems();
-        return new PaymentDto(dto.id(), dto.value(), dto.name(), dto.number(), dto.expired(), dto.code(), dto.status(),
-                dto.orderId(), dto.paymentId(), orderItems);
+        final var orderItems = orderFeignClient.getOrderItems(payment.getOrderId()).getItems();
+        return new PaymentDto(payment, orderItems);
     }
 
     //FallBack getById

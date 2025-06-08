@@ -1,6 +1,7 @@
 package br.com.alurafood.mspayments.dto;
 
 import br.com.alurafood.mspayments.model.OrderItem;
+import br.com.alurafood.mspayments.model.Payment;
 import br.com.alurafood.mspayments.model.Status;
 
 import java.math.BigDecimal;
@@ -17,4 +18,10 @@ public record PaymentDto(Long id,
                          Long orderId,
                          Long paymentId,
                          List<OrderItem> orderItems) {
+
+    public PaymentDto(Payment payment, List<OrderItem> orderItems) {
+        this(payment.getId(), payment.getValue(),
+                payment.getName(), payment.getNumber(), payment.getExpired(),
+                payment.getCode(), payment.getStatus(), payment.getOrderId(), payment.getPaymentId(), orderItems);
+    }
 }

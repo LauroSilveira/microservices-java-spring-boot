@@ -2,9 +2,11 @@
 package br.com.alurafood.mspayments.service;
 
 import br.com.alurafood.mspayments.dto.PaymentDto;
+import br.com.alurafood.mspayments.model.Payment;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
 
 public interface PaymentService {
     PaymentDto save(PaymentDto dto);
@@ -13,7 +15,7 @@ public interface PaymentService {
 
     void delete(Long id);
 
-    Page<PaymentDto> getAllPayments(Pageable pageable);
+    Page<Payment> getAllPayments(Pageable pageable);
 
     PaymentDto getById(Long id);
 

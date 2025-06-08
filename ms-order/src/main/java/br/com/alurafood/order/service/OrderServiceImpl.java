@@ -41,7 +41,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto createOrder(OrderDto orderDto) {
-        final Order order = mapper.mapToEntiy(orderDto);
+        final Order order = mapper.mapToEntity(orderDto);
 
         order.setPurchaseDate(LocalDateTime.now());
         order.setStatusOrder(Status.ORDERED);
@@ -54,7 +54,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto updateStatus(Long id, StatusDto dto) {
 
-        final var order = repository.porIdComItens(id);
+        final var order = repository.findOrderWithItems(id);
 
         if (Objects.isNull(order)) {
             throw new EntityNotFoundException();
@@ -68,7 +68,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void approvePayment(Long id) {
 
-        final var order = repository.porIdComItens(id);
+        final var order = repository.findOrderWithItems(id);
 
         if (Objects.isNull(order)) {
             throw new EntityNotFoundException();
