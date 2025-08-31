@@ -7,22 +7,17 @@ import br.com.alurafood.order.model.Order;
 import br.com.alurafood.order.model.Status;
 import br.com.alurafood.order.repository.OrderRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 @Service
+@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository repository;
     private final OrderMapper mapper;
-
-    public OrderServiceImpl(OrderRepository repository, OrderMapper mapper) {
-        this.repository = repository;
-        this.mapper = mapper;
-    }
-
 
     @Override
     public List<OrderDto> getOrders() {
@@ -32,7 +27,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDto getOrderById(Long id) {
+    public OrderDto getOrderById(final Long id) {
         return repository.findById(id)
                 .map(mapper::mapToDto)
                 .orElseThrow(EntityNotFoundException::new);
@@ -40,9 +35,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDto createOrder(OrderDto orderDto) {
+    public OrderDto createOrder(final OrderDto orderDto) {
         final Order order = mapper.mapToEntity(orderDto);
-
         order.setPurchaseDate(LocalDateTime.now());
         order.setStatusOrder(Status.ORDERED);
         order.getItems().forEach(item -> item.setOrder(order));
@@ -52,28 +46,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDto updateStatus(Long id, StatusDto dto) {
-
-        final var order = repository.findOrderWithItems(id);
-
-        if (Objects.isNull(order)) {
-            throw new EntityNotFoundException();
-        }
-
-        order.setStatusOrder(dto.getStatus());
-        repository.updateStatus(dto.getStatus(), order);
+    public OrderDto updateStatus(final Long id, final StatusDto status) {
+        final var order = repository.findOrderWithItems(id)
+                .orElseThrow(EntityNotFoundException::new);
+        order.setStatusOrder(status.getStatus());
+        repository.updateStatus(status.getStatus(), order);
         return mapper.mapToDto(order);
     }
 
     @Override
-    public void approvePayment(Long id) {
-
-        final var order = repository.findOrderWithItems(id);
-
-        if (Objects.isNull(order)) {
-            throw new EntityNotFoundException();
-        }
-
+    public void approvePayment(final Long orderId) {
+        final var order = repository.findOrderWithItems(orderId)
+                .orElseThrow(EntityNotFoundException::new);
         order.setStatusOrder(Status.PAID);
         repository.updateStatus(Status.PAID, order);
     }

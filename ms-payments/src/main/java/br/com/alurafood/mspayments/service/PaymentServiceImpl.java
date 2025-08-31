@@ -13,7 +13,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedModel;
 import org.springframework.stereotype.Service;
 
 
@@ -93,12 +92,9 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public void updateStatus(Long id) {
         final var statusUpdated = repository.findById(id);
-
-
         if (statusUpdated.isEmpty()) {
             throw new EntityNotFoundException();
         }
-
         statusUpdated.get()
                 .setStatus(Status.ORDER_NOT_CONFIRMED);
         repository.save(statusUpdated.get());
