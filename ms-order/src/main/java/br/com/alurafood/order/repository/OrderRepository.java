@@ -1,11 +1,13 @@
-package br.com.alurafood.pedidos.repository;
+package br.com.alurafood.order.repository;
 
-import br.com.alurafood.pedidos.model.Order;
-import br.com.alurafood.pedidos.model.Status;
+import br.com.alurafood.order.model.Order;
+import br.com.alurafood.order.model.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
@@ -15,6 +17,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     void updateStatus(Status status, Order order);
 
     @Query(value = "SELECT p from Order p LEFT JOIN FETCH p.items where p.id = :id")
-    Order porIdComItens(Long id);
+    Optional<Order> findOrderWithItems(Long id);
 
 }

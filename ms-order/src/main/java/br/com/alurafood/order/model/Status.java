@@ -1,4 +1,4 @@
-package br.com.alurafood.pedidos.model;
+package br.com.alurafood.order.model;
 
 public enum Status {
     ORDERED,

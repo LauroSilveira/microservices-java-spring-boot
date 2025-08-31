@@ -1,8 +1,8 @@
 
-package br.com.alurafood.pedidos.service;
+package br.com.alurafood.order.service;
 
-import br.com.alurafood.pedidos.dto.OrderDto;
-import br.com.alurafood.pedidos.dto.StatusDto;
+import br.com.alurafood.order.dto.OrderDto;
+import br.com.alurafood.order.dto.StatusDto;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
-package br.com.alurafood.pedidos.dto;
+package br.com.alurafood.order.dto;
 
-import br.com.alurafood.pedidos.model.Status;
+import br.com.alurafood.order.model.Status;
 import lombok.*;
 
 import java.time.LocalDateTime;

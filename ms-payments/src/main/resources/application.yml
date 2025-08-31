@@ -1,5 +1,5 @@
 
-# Enable the automatic discover port from eureka
+# Enable the automatic discovers port from eureka
 server:
   port: 0
 
@@ -16,6 +16,11 @@ eureka:
 spring:
   application:
     name: ms-payments
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${AUTHORIZATION_SERVER_URL:http://localhost:9000}
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${MYSQL_PAYMENTS_DB_INSTANCE:localhost:3306}/payments?createDatabaseIfNotExist=true
@@ -26,7 +31,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
 # Resilience4J
 resilience4j:
   circuitbreaker:
