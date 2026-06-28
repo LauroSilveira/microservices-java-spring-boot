@@ -20,12 +20,14 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${MYSQL_PAYMENTS_DB_INSTANCE:localhost:3306}/payments?createDatabaseIfNotExist=true
     username: ${MYSQL_PAYMENTS_DB_USER:root}
-    password: ${MYSQL_PAYMENTS_DB_PASSWORD:root}
+    password: ${MYSQL_PAYMENTS_DB_PASSWORD:}
+
   jpa:
     show-sql: true
     properties:
       hibernate:
-        format_sql: true
+        format-sql: true
+    database-platform: org.hibernate.dialect.MySQLDialect
 
 # Resilience4J
 resilience4j:

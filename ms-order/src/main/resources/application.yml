@@ -4,18 +4,20 @@ server:
   port: 0
 
 spring:
-    datasource:
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        password: ${MYSQL_ORDER_DB_USER:root}
-        username: ${MYSQL_ORDER_DB_PASSWORD:root}
-        url: jdbc:mysql://${MYSQL_ORDER_DB_INSTANCE:localhost:3306}/orders?createDatabaseIfNotExist=true
-    application:
-      name: ms-order
-    jpa:
-      properties:
-        hibernate:
-          format_sql: true
-      show-sql: true
+  application:
+    name: ms-order
+  datasource:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://${MYSQL_ORDER_DB_INSTANCE:localhost:3306}/orders?createDatabaseIfNotExist=true
+      username: ${MYSQL_ORDER_DB_USER:root}
+      password: ${MYSQL_ORDER_DB_PASSWORD:}
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQLDialect
 
 eureka:
   client:
