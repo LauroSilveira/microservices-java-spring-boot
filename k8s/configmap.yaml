@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: data
+data:
+  SERVER_HOST: ""
+  DB_HOST: "mysql"
+  EUREKA_SERVER: "http://service-discovery:8761/eureka"

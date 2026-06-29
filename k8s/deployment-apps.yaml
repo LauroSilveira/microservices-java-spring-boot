@@ -1,0 +1,156 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway
+  labels:
+    app: gateway
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: gateway
+  template:
+    metadata:
+      labels:
+        app: gateway
+    spec:
+      containers:
+        - name: gateway
+          image: laurocorreia/api-gateway:1.0.1
+          ports:
+            - containerPort: 80
+          env:
+            - name: SERVER_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: data
+                  key: SERVER_HOST
+            - name: EUREKA_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: data
+                  key: EUREKA_SERVER
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms-order
+  labels:
+    app: ms-order
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ms-order
+  template:
+    metadata:
+      labels:
+        app: ms-order
+    spec:
+      containers:
+        - name: ms-order
+          image: laurocorreia/ms-order:1.0.1
+          ports:
+            - containerPort: 80
+          env:
+            - name: SERVER_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: data
+                  key: SERVER_HOST
+            - name: MYSQL_ORDER_DB_INSTANCE
+              valueFrom:
+                configMapKeyRef:
+                  name: data
+                  key: DB_HOST
+            - name: MYSQL_ORDER_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: passwords
+                  key: DB_USER
+            - name: MYSQL_ORDER_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: passwords
+                  key: DB_MYSQL_PASSWORD
+            - name: EUREKA_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: data
+                  key: EUREKA_SERVER
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms-payments
+  labels:
+    app: ms-payments
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ms-payments
+  template:
+    metadata:
+      labels:
+        app: ms-payments
+    spec:
+      containers:
+        - name: ms-payments
+          image: laurocorreia/ms-payments:1.0.1
+          ports:
+            - containerPort: 80
+          env:
+            - name: SERVER_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: data
+                  key: SERVER_HOST
+            - name: MYSQL_PAYMENTS_DB_INSTANCE
+              valueFrom:
+                configMapKeyRef:
+                  name: data
+                  key: DB_HOST
+            - name: MYSQL_PAYMENTS_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: passwords
+                  key: DB_USER
+            - name: MYSQL_PAYMENTS_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: passwords
+                  key: DB_MYSQL_PASSWORD
+            - name: EUREKA_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: data
+                  key: EUREKA_SERVER
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-discovery
+  labels:
+    app: service-discovery
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-discovery
+  template:
+    metadata:
+      labels:
+        app: service-discovery
+    spec:
+      containers:
+        - name: service-discovery
+          image: laurocorreia/service-discovery:1.0.1
+          ports:
+            - containerPort: 80
+          env:
+            - name: SERVER_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: data
+                  key: SERVER_HOST
