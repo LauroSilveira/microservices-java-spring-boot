@@ -3,6 +3,5 @@ kind: ConfigMap
 metadata:
   name: data
 data:
-  SERVER_HOST: ""
+  SERVER_HOST: "http://service-discovery:8761/eureka"
   DB_HOST: "mysql"
-  EUREKA_SERVER: "http://service-discovery:8761/eureka"

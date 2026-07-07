@@ -12,6 +12,7 @@ eureka:
     # generate an instance with application name and a random number
     # Is a unique identifier for each microservice
     instance-id: ${spring.application.name}:${random.int}
+    prefer-ip-address: true
 
 spring:
   application:
