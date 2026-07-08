@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: StatefulSet # StateFulSet has state, store data and respect deployment order.
 metadata:
   name: mysql
 spec:

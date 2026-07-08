@@ -1,0 +1,28 @@
+# 1. Primeiro os recursos base
+kubectl apply -f secrets.yaml
+kubectl apply -f configmap.yaml
+kubectl apply -f volumes.yaml
+
+# 2. Depois a base de dados
+kubectl apply -f mysql-service.yaml
+kubectl apply -f mysql.yaml
+
+# 3. Depois o service-discovery
+kubectl apply -f service-discovery.yaml
+
+# 4. Depois os serviços e apps
+kubectl apply -f services.yaml
+kubectl apply -f loadbalancer.yaml
+kubectl apply -f deployment-apps.yaml
+
+-----------------------------
+kubectl apply \
+  -f secrets.yaml \
+  -f configmap.yaml \
+  -f volumes.yaml \
+  -f mysql-service.yaml \
+  -f mysql.yaml \
+  -f service-discovery.yaml \
+  -f services.yaml \
+  -f loadbalancer.yaml \
+  -f deployment-apps.yaml
