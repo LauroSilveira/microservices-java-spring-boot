@@ -1,6 +1,6 @@
 # deploy.sh
 #!/bin/bash
-kubectl apply \
+cd ~/GitHub/microservices-java-spring-boot/k8s && kubectl apply \
   -f secrets.yaml \
   -f configmap.yaml \
   -f volumes.yaml \

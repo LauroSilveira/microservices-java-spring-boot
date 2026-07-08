@@ -19,6 +19,7 @@ kind: Service
 metadata:
   name: service-discovery
 spec:
+  clusterIP: None
   selector:
     app: service-discovery
   ports:
