@@ -20,9 +20,17 @@ kubectl apply \
   -f secrets.yaml \
   -f configmap.yaml \
   -f volumes.yaml \
-  -f mysql-service.yaml \
+  -f services.yaml \
   -f mysql.yaml \
-  -f service-discovery.yaml \
+  -f deployment-apps.yaml \
+  -f loadbalancer.yaml
+
+-----------------------------
+kubectl delete \
+  -f secrets.yaml \
+  -f configmap.yaml \
+  -f volumes.yaml \
+  -f mysql.yaml \
   -f services.yaml \
   -f loadbalancer.yaml \
   -f deployment-apps.yaml
