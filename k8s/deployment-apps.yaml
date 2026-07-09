@@ -17,8 +17,6 @@ spec:
       containers:
         - name: gateway
           image: laurocorreia/api-gateway:1.0.1
-          ports:
-            - containerPort: 80
           env:
             - name: SERVER_HOST
               valueFrom:
@@ -29,7 +27,14 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: data
-                  key: EUREKA_SERVER
+                  key: SERVER_HOST
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -49,9 +54,7 @@ spec:
     spec:
       containers:
         - name: ms-order
-          image: laurocorreia/ms-order:1.0.1
-          ports:
-            - containerPort: 80
+          image: laurocorreia/ms-order:1.0.2
           env:
             - name: SERVER_HOST
               valueFrom:
@@ -77,10 +80,17 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: data
-                  key: EUREKA_SERVER
+                  key: SERVER_HOST
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: Deployment # StateFulSet has state, store data and respect deployment order. That is the difference between it and StatefulSet.
 metadata:
   name: ms-payments
   labels:
@@ -97,9 +107,7 @@ spec:
     spec:
       containers:
         - name: ms-payments
-          image: laurocorreia/ms-payments:1.0.1
-          ports:
-            - containerPort: 80
+          image: laurocorreia/ms-payments:1.0.2
           env:
             - name: SERVER_HOST
               valueFrom:
@@ -125,32 +133,50 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: data
-                  key: EUREKA_SERVER
+                  key: SERVER_HOST
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet # StatefulSet does not have state or store data
 metadata:
   name: service-discovery
-  labels:
-    app: service-discovery
 spec:
-  replicas: 1
   selector:
     matchLabels:
-      app: service-discovery
+      app: service-discovery # has to match .spec.template.metadata.labels
+  serviceName: "service-discovery"
+  replicas: 2
+  minReadySeconds: 10 # by default is 0
   template:
     metadata:
       labels:
-        app: service-discovery
+        app: service-discovery # has to match .spec.selector.matchLabels
     spec:
+      terminationGracePeriodSeconds: 10
       containers:
         - name: service-discovery
-          image: laurocorreia/service-discovery:1.0.1
+          image: laurocorreia/service-discovery:1.0.3
           ports:
-            - containerPort: 80
+            - containerPort: 8761
+              name: svc-discovery
           env:
             - name: SERVER_HOST
               valueFrom:
                 configMapKeyRef:
                   name: data
                   key: SERVER_HOST
+            - name: EUREKA_HOSTNAME
+              value: "service-discovery"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
